@@ -702,6 +702,11 @@ masks `password/passcode/pin/secret/api key/token` phrases, 13–19 digit card-l
   `data/campus_customs.db` and `data/products/*` are ignored while `.env.example`, `.gitignore`,
   `backend/*` and `output/app_check_images/*` remain tracked.
 
+**What was lacking:** the first prompt fixed the target tree and the ignore rules, but it was
+given before any code existed, so it could not confirm that the finished project actually
+matched the layout, or that the ignore rules held against the real files. The follow-up came
+at the end and asked for that verification.
+
 **Follow-up prompt (final packaging):**
 > Okay, when you are done we're at the end and we're gonna put all the code in a folder named
 > homework4. We're gonna push it public to a GitHub repository (…) don't put the real .env,
@@ -742,6 +747,26 @@ Two scanner hits were investigated and both were false positives: a loose `^.env
 matching `.env.example`, and a "secret-shaped string" in `AI_prompts.md` that turned out to be
 the slash-separated phrase `age/gender/race/religion/disability/health/sexuality` from the
 safety rules.
+
+**Reproduced from a clean clone**, the way a grader will: cloned the public repo into an empty
+directory, dropped in the data pack, copied `.env.example` to `.env`, created a fresh venv from
+`requirements.txt`, and ran the documented command
+`cd backend && ../venv/bin/uvicorn main:app --reload --port 8000`.
+
+| Check from the clone | Result |
+| --- | --- |
+| `requirements.txt` covers every import | ✅ fastapi, uvicorn, pydantic_ai, dotenv, requests, pydantic all resolve |
+| `/api/health` (the README's own check) | `status: ok`, 102 products, model `gpt-5.6-luna` |
+| Products / categories / `?size=XL` | 102 / 21 / 77 |
+| Product image | HTTP 200 |
+| Login as the seeded test user | Test User |
+| Agent chat end to end | "Champion Reverse Weave Hoodie 1 is **sold out in XL**. It's **$68**…" |
+| `npm install && npm run build` | ✅ builds in 445 ms |
+
+**One real bug this caught:** `npm run build` failed on a clean clone with
+`TS2580: Cannot find name 'process'` — `vite.config.ts` reads `process.env.VITE_BACKEND_URL`
+but `@types/node` was never declared. Earlier typechecks had missed it because they reused an
+existing `node_modules`. Added `@types/node` and re-verified from a brand-new clone.
 
 **Resolved — the open question from the first pass:** `output/app_check_images/` **is**
 committed. The instruction not to commit images refers to the product-image data pack
