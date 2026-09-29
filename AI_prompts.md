@@ -486,6 +486,30 @@ usability, with the visual/creative work belonging to Problem 10.
 
 Written up in `output/usability.md`.
 
+**Later follow-up prompt (added after the four above were done):**
+> wait can we add stuff to the cart as well
+
+> that seems like a great front end add on you could add as well right like just tack that on
+
+**What was lacking:** the shopping bag was built as a standalone feature first and documented
+only in `harness.md` §14. It was not counted as a usability improvement, so the write-up and
+the prompt log disagreed about what had been added.
+
+**Resolution:** added as **Frontend 3 (extra)** in `output/usability.md`, explicitly labelled
+as beyond the two required front-end improvements so the required count still reads cleanly.
+
+**Extra improvement — Add to bag, capped at real stock:** size picker with sold-out sizes
+disabled, a low-stock warning at ≤3 units, a navbar bag badge, and a slide-over drawer with
+steppers, remove and subtotal. The bag is `localStorage`-backed so it survives a refresh, and
+every quantity is clamped to the units actually on the shelf in that size — adding is refused
+at 0 units, the `+` control disables at the cap, and dropping to 0 removes the line. It closes
+the loop from "the assistant found it" to "it's in my bag", and prevents overselling at the
+cart rather than discovering it at checkout.
+
+**Verified:** Basic Hoodie XL has exactly 2 units in the database → page warned "Only 2 left in
+XL", bag capped at 2 with the `+` disabled and the note "That's all 2 we have in XL", subtotal
+**$136.00** (2 × $68.00), and the badge still read 2 after a full page reload.
+
 **Verified, with measurements:**
 
 | Check | Result |
@@ -497,6 +521,7 @@ Written up in `output/usability.md`.
 | `/api/health` cache counters | `{"loads": 1, "hits": 5, "products_cached": 102}` |
 | `check_sizes_bulk` on 8 hoodies | one call, 7 in stock + 1 sold out — matches the database |
 | Agent actually chooses the bulk tool | yes — "Which of the hoodies come in XXL?" produced a `check_sizes_bulk` call in the audit trail |
+| Bag capped at real stock (XL = 2) | `+` disabled at 2; subtotal $136.00; survives reload |
 
 ---
 
