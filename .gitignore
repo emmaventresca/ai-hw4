@@ -1,0 +1,32 @@
+# ── Secrets ──────────────────────────────────────────
+# Never commit the real key. .env.example holds placeholders only.
+.env
+.env.*
+!.env.example
+
+# ── Local-only data pack (NOT in git) ────────────────
+# Graders place this themselves; see README.
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# ── Python ───────────────────────────────────────────
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# ── Node / frontend ──────────────────────────────────
+node_modules/
+.next/
+dist/
+build/
+
+# ── OS ───────────────────────────────────────────────
+.DS_Store
+
+# ── Editor/agent scratch ─────────────────────────────
+.claude/
+.vscode/
