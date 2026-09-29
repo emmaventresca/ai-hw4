@@ -580,3 +580,48 @@ cd frontend && npm install && npm run dev      # http://localhost:5173
 
 Vite proxies `/api` and `/media` to the backend. Requires `data/campus_customs.db` and
 `data/products/` in place, and `PORTKEY_API_KEY` in `.env`. Full instructions in the README.
+
+---
+
+## 14. Shopping cart
+
+A client-side bag, held in React context and mirrored to `localStorage` under `cc.cart`, so it
+survives a refresh. There is no orders table in the schema and no payment integration, so the
+cart deliberately stops at a subtotal and a Checkout button rather than pretending to take
+money.
+
+### 14.1 Shape
+
+```ts
+CartLine { product_id, name, price, image_url, size, quantity, available }
+```
+
+`available` is the units on the shelf **in that size**, captured from the product's
+`inventory` when the line is created. Keeping it on the line is what lets the cart enforce
+real stock without re-querying on every click.
+
+### 14.2 Stock is enforced, not suggested
+
+The cart is the one place a shopper could otherwise order more than exists, so:
+
+- Sold-out sizes are rendered struck-through and `disabled` — they cannot be selected.
+- `add()` refuses outright if the size has 0 units.
+- Every quantity change is clamped to `available`; the `+` control disables at the cap and the
+  line explains why ("That's all 2 we have in XL.").
+- Dropping a quantity to 0 removes the line rather than leaving an empty row.
+- A product with every size sold out shows no picker at all, just a note pointing the shopper
+  at the chat for something similar.
+
+### 14.3 Where it appears
+
+| Place | What |
+| --- | --- |
+| Product page | Size picker with live stock, a "only N left" warning at ≤3, and **Add to bag** |
+| Navbar | Bag button with a live item-count badge |
+| Drawer | Slide-over with line items, thumbnails, steppers, remove, subtotal, checkout |
+
+**Verified in the browser:** adding the Basic Hoodie in XL (2 units in the database) showed
+"Only 2 left in XL", added one, stepped to 2, then **disabled the + control** and showed the
+cap note. Subtotal read **$136.00** — 2 × $68.00. After a full page reload the badge still read
+2, restored from `localStorage`, with the drawer correctly closed.
+Screenshot: `app_check_images/cart.jpg`.

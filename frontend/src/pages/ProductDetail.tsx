@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { fetchProduct, formatPrice, imageUrl } from '../api'
 import type { Product } from '../types'
 import StockPill from '../components/StockPill'
+import AddToCart from '../components/AddToCart'
 
 export default function ProductDetail() {
   const { productId } = useParams<{ productId: string }>()
@@ -83,6 +84,10 @@ export default function ProductDetail() {
             ) : (
               <p className="field__hint">Color information isn’t listed for this piece.</p>
             )}
+          </div>
+
+          <div className="detail__block">
+            <AddToCart product={product} />
           </div>
 
           <div className="detail__block">

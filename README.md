@@ -95,6 +95,9 @@ VITE_BACKEND_URL=http://127.0.0.1:8010 npm run dev
   the full item page with per-size stock.
 - **Create Account / Login** — a seeded test account exists:
   `test@campuscustoms.yale.edu` / `password`
+- **Add to bag** — pick a size on any product page and add it. The bag button in the navbar
+  opens a drawer with quantities, a subtotal and removal. Quantities are capped at real
+  per-size stock, sold-out sizes can't be selected, and the bag survives a refresh.
 - **Chat** — the bubble in the bottom right. Try:
   - "What hoodies do you have?"
   - "Do you have the Champion Reverse Weave Hoodie 1 in XL?" *(it's sold out — it will say so)*
@@ -116,7 +119,8 @@ hw4/
   frontend/              # React + Vite + TypeScript
     src/
       pages/             # Home, About, Products, ProductDetail, Login, Signup
-      components/        # NavBar, ProductCard, StockPill, ChatWidget
+      components/        # NavBar, ProductCard, ChatWidget, CartDrawer, AddToCart
+      cart.tsx           # shopping bag (localStorage-backed)
       auth.tsx           # session context
       api.ts             # typed API client
   backend/

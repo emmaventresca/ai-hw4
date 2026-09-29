@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 import NavBar from './components/NavBar'
 import ChatWidget from './components/ChatWidget'
 import ChatResults from './components/ChatResults'
+import CartDrawer from './components/CartDrawer'
 import ScrollToTop from './components/ScrollToTop'
 import Home from './pages/Home'
 import About from './pages/About'
@@ -39,6 +40,7 @@ export default function App() {
         </div>
       </footer>
       <ChatWidget />
+      <CartDrawer />
     </div>
   )
 }

@@ -148,6 +148,25 @@
     <img src="app_check_images/home_design.jpg" alt="Campus Customs home page with Harkness Tower illustration" />
   </section>
 
+  <section class="check">
+    <span class="tag">Bonus · Cart</span>
+    <h2>Add to bag — quantities capped at real stock</h2>
+    <p class="caption">
+      The Basic Hoodie Big Yale has exactly <strong>2 units left in XL</strong>. The product
+      page warns “Only 2 left in XL”, and after stepping the bag up to 2 the <code>+</code>
+      control disables and the line explains “That’s all 2 we have in XL.” Subtotal reads
+      <strong>$136.00</strong> — 2&nbsp;×&nbsp;$68.00.
+    </p>
+    <img src="app_check_images/cart.jpg"
+         alt="Cart drawer showing Basic Hoodie Big Yale, size XL, quantity 2, subtotal $136.00" />
+    <div class="verify">
+      <strong>Verified against the database.</strong>
+      <code>SELECT quantity FROM inventory WHERE product_id='basic-hoodie-big-yale' AND size='XL'</code>
+      returns <strong>2</strong>. The bag cannot be pushed past it, sold-out sizes cannot be
+      selected at all, and the basket is restored from <code>localStorage</code> after a reload.
+    </div>
+  </section>
+
   <footer class="wrap">
     Screenshots captured from the running application. Full write-ups in
     <code>harness.md</code>, <code>usability.md</code> and <code>design.md</code>.

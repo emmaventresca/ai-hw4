@@ -1,12 +1,14 @@
 import { NavLink, Link } from 'react-router-dom'
 import { useAuth } from '../auth'
 import YaleMark from './art/YaleMark'
+import { useCart } from '../cart'
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   isActive ? 'nav__link is-active' : 'nav__link'
 
 export default function NavBar() {
   const { user, logout } = useAuth()
+  const { count, open } = useCart()
 
   return (
     <header className="nav">
@@ -23,6 +25,12 @@ export default function NavBar() {
           <NavLink to="/" className={linkClass} end>Home</NavLink>
           <NavLink to="/products" className={linkClass}>Products</NavLink>
           <NavLink to="/about" className={linkClass}>About Us</NavLink>
+
+          <button type="button" className="nav__cart" onClick={open} aria-label={`Open bag, ${count} items`}>
+            <span aria-hidden="true">🛍️</span>
+            Bag
+            {count > 0 && <span className="nav__cart-badge">{count}</span>}
+          </button>
 
           {user ? (
             <span className="nav__user">
